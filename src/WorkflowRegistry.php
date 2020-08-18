@@ -215,14 +215,12 @@ class WorkflowRegistry
                 $transitionName = $transition['name'];
             }
 
-            foreach ((array)$transition['from'] as $form) {
-                $transitionObj = new Transition($transitionName, $form, $transition['to']);
-                $builder->addTransition($transitionObj);
+            $transitionObj = new Transition($transitionName, $transition['from'], $transition['to']);
+            $builder->addTransition($transitionObj);
 
-                if (isset($transition['metadata'])) {
-                    $metadata['transitions']->attach($transitionObj, $transition['metadata']);
-                }
-            }
+            if (isset($transition['metadata'])) {
+                $metadata['transitions']->attach($transitionObj, $transition['metadata']);
+            }            
         }
 
         $metadataStore = new InMemoryMetadataStore(
