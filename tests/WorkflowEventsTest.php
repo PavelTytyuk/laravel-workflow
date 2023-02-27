@@ -121,6 +121,7 @@ class WorkflowEventsTest extends BaseWorkflowTestCase
 
     /**
      * @test
+     *
      * @dataProvider providesEventsToDispatchScenarios
      */
     public function testIfWorkflowOnlyEmitsSpecificEvents(?array $eventsToDispatch, array $eventsToExpect)
@@ -181,7 +182,7 @@ class WorkflowEventsTest extends BaseWorkflowTestCase
         ];
 
         foreach ($events as $key => $event) {
-            yield "silences ${event}" => [[$event], [$key]];
+            yield "silences {$event}" => [[$event], [$key]];
         }
     }
 

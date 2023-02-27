@@ -196,6 +196,33 @@ class WorkflowRegistry
     }
 
     /**
+     * Checks if the workflow is already loaded for this supported class
+     *
+     * @param string $workflowName
+     * @param string $supportStrategy
+     *
+     * @throws DuplicateWorkflowException
+     *
+     * @return bool
+     */
+    public function isLoaded($workflowName, $supportStrategy)
+    {
+        if (! $this->registryConfig['track_loaded']) {
+            return false;
+        }
+
+        if (isset($this->loadedWorkflows[$supportStrategy]) && in_array($workflowName, $this->loadedWorkflows[$supportStrategy])) {
+            if (! $this->registryConfig['ignore_duplicates']) {
+                throw new DuplicateWorkflowException(sprintf('Duplicate workflow (%s) attempting to be loaded for %s', $workflowName, $supportStrategy)); // phpcs:ignore
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Parses events to dispatch data from config
      */
     protected function parseEventsToDispatch(array $workflowData)
@@ -219,33 +246,6 @@ class WorkflowRegistry
             'track_loaded' => false,
             'ignore_duplicates' => true,
         ];
-    }
-
-    /**
-     * Checks if the workflow is already loaded for this supported class
-     *
-     * @param string $workflowName
-     * @param string $supportStrategy
-     *
-     * @throws DuplicateWorkflowException
-     *
-     * @return bool
-     */
-    protected function isLoaded($workflowName, $supportStrategy)
-    {
-        if (! $this->registryConfig['track_loaded']) {
-            return false;
-        }
-
-        if (isset($this->loadedWorkflows[$supportStrategy]) && in_array($workflowName, $this->loadedWorkflows[$supportStrategy])) {
-            if (! $this->registryConfig['ignore_duplicates']) {
-                throw new DuplicateWorkflowException(sprintf('Duplicate workflow (%s) attempting to be loaded for %s', $workflowName, $supportStrategy)); // phpcs:ignore
-            }
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
